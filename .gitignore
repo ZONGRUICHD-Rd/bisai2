@@ -3,3 +3,7 @@ __pycache__/
 _site/
 my_brain.json
 video_build/
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/build*.log
