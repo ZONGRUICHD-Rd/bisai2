@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# 作者：欧阳卓元（深圳市龙华区和平实验小学 四年级三班）· 2026 年深圳市龙华区人工智能创意编程挑战赛 Python 小学组
 """
 会学习的红绿灯 —— 电脑版入口
 ============================
@@ -28,7 +29,7 @@ ANCHOR = {"nw": "nw", "n": "n", "ne": "ne", "w": "w", "center": "center", "e": "
 class TkFrontend(object):
     def __init__(self):
         self.root = tk.Tk()
-        self.root.title("会学习的红绿灯 · 龙华智慧路口 AI 交通指挥官")
+        self.root.title("会学习的红绿灯 · 龙华智慧路口 AI 交通指挥官 —— 作者：%s（%s %s）" % (C.AUTHOR, C.SCHOOL, C.CLASS_NAME))
         self.root.configure(bg=C.COL["bg"])
         sw, sh = self.root.winfo_screenwidth(), self.root.winfo_screenheight()
         self.k = min(1.0, sw * 0.96 / C.WIDTH, sh * 0.86 / C.HEIGHT)   # 小屏幕自动缩小

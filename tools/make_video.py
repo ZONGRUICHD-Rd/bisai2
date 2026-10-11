@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# 作者：欧阳卓元（深圳市龙华区和平实验小学 四年级三班）· 2026 年深圳市龙华区人工智能创意编程挑战赛 Python 小学组
 """
 生成《会学习的红绿灯》作品介绍视频
 ==================================
@@ -50,7 +51,7 @@ CA = "/root/.ccr/ca-bundle.crt"
 # ============================================================== 分镜和台词 ==
 SHOTS = [
     dict(key="title", kind="card", min=7,
-         text="大家好！我的作品叫《会学习的红绿灯》。它是一个用 Python 从零手写人工智能算法、会自己学会指挥十字路口的红绿灯。"),
+         text="大家好！我是深圳市龙华区和平实验小学四年级三班的欧阳卓元。我的作品叫《会学习的红绿灯》，它是一个用 Python 从零手写人工智能算法、会自己学会指挥十字路口的红绿灯。"),
     dict(key="problem", kind="card", min=10,
          text="每天上学路上，我常常看到：一边排着长长的车队，另一边一辆车都没有，可红灯还是要亮满时间。"
               "因为传统红绿灯是定时的，它不会看路况。"
@@ -346,7 +347,10 @@ def frames_title(shot, bg_path, outro=False):
             p.text(520, 360, "会学习的红绿灯", WHITE, 124, True, "w")
             p.text(526, 490, "龙华智慧路口 · AI 交通指挥官", COL["muted"], 50, False, "w")
             p.rect(526, 570, 940, 64, COL["panel"], COL["ai"], 2, 32)
-            p.text(996, 602, "Python 组参赛作品 · 纯手写 Q 学习 · 0 个第三方库", COL["ai"], 30, True, "center")
+            p.text(996, 602, "Python 小学组 · 纯手写 Q 学习 · 0 个第三方库", COL["ai"], 30, True, "center")
+            p.text(526, 700, "作者：%s" % C.AUTHOR, COL["warn"], 44, True, "w")
+            p.text(526, 762, "%s　%s" % (C.SCHOOL, C.CLASS_NAME), COL["text"], 34, False, "w")
+            p.text(526, 815, C.CONTEST, COL["muted"], 28, False, "w")
         else:
             p.text(520, 330, "谢谢观看！", WHITE, 120, True, "w")
             p.text(526, 450, "在线体验：zongruichd-rd.github.io/bisai2", COL["ai"], 40, True, "w")
@@ -357,6 +361,7 @@ def frames_title(shot, bg_path, outro=False):
                     p.rect(x, 600, 300, 66, COL["panel2"], COL["blue"], 2, 33)
                     p.text(x + 150, 633, chip, COL["text"], 30, True, "center")
                 p.text(526, 720, "下一步想做的", COL["dim"], 26, False, "w")
+            p.text(526, 820, "作者：%s　%s %s" % (C.AUTHOR, C.SCHOOL, C.CLASS_NAME), COL["warn"], 34, True, "w")
         yield "card", p.cmds, overlay(shot, t)
 
 

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# 作者：欧阳卓元（深圳市龙华区和平实验小学 四年级三班）· 2026 年深圳市龙华区人工智能创意编程挑战赛 Python 小学组
 """
 画面绘制：把整个世界“翻译”成一串绘图指令
 ==========================================
@@ -500,7 +501,7 @@ def draw_header(p, app):
     world = app.world
     p.text(20, 14, "会学习的红绿灯", COL["text"], 26, True)
     p.text(214, 22, "龙华智慧路口 · AI 交通指挥官", COL["muted"], 14)
-    p.text(214, 42, "纯 Python 手写 Q 学习 · 左右两个路口迎来完全相同的车流", COL["dim"], 11)
+    p.text(214, 42, "作者：%s · %s %s" % (C.AUTHOR, C.SCHOOL, C.CLASS_NAME), COL["dim"], 11)
     cx = 700
     p.rect(cx, 14, 180, 40, COL["panel"], COL["border"], 1, 20)
     if SCENARIOS[world.scenario][2] is None:
@@ -522,11 +523,13 @@ def _dim(p):
 
 def draw_intro(p):
     _dim(p)
-    w, h = 760, 430
+    w, h = 760, 456
     x, y = (C.WIDTH - w) / 2, (C.HEIGHT - h) / 2
     p.rect(x, y, w, h, COL["panel"], COL["ai"], 2, 18)
     p.text(x + w / 2, y + 44, "会学习的红绿灯", COL["text"], 32, True, "center")
     p.text(x + w / 2, y + 82, "一个会从经验中自己学会指挥交通的 AI —— 全部用 Python 从零手写", COL["muted"], 14, False, "center")
+    p.text(x + w / 2, y + 108, "作者：%s　%s %s" % (C.AUTHOR, C.SCHOOL, C.CLASS_NAME), COL["warn"], 13, True, "center")
+    y += 26
     items = [
         (COL["fixed"], "左边：传统定时红绿灯", "不管有没有车，每 15 秒机械切换一次"),
         (COL["ai"], "右边：AI 自学习红绿灯", "用 Q 学习算法看路况做决定，边用边学，越来越聪明"),
@@ -539,7 +542,7 @@ def draw_intro(p):
         p.rect(x + 40, iy, 6, 48, col, r=3)
         p.text(x + 62, iy + 14, head, col, 15, True, "w")
         p.text(x + 62, iy + 35, body, COL["text"], 13, False, "w")
-    bx, by = x + w / 2 - 110, y + h - 70
+    bx, by = x + w / 2 - 110, y + h - 96
     p.rect(bx, by, 220, 46, COL["ai"], None, 1, 23)
     p.text(bx + 110, by + 23, "开始观察 ▶", "#0b1020", 17, True, "center")
 

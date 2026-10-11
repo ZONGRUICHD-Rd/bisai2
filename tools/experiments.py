@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# 作者：欧阳卓元（深圳市龙华区和平实验小学 四年级三班）· 2026 年深圳市龙华区人工智能创意编程挑战赛 Python 小学组
 """
 论文里所有实验的复现脚本：python tools/experiments.py
 结果写到 paper/results.json，论文中的表格和曲线都来自这里。
