@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>会学习的红绿灯 · AI 交通指挥官</title>
+<meta name="description" content="一个用纯 Python 从零手写 Q 学习算法、会自己学会指挥十字路口的 AI 红绿灯。网页里运行的就是真正的 Python 源代码。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect x=%279%27 y=%271%27 width=%2714%27 height=%2730%27 rx=%277%27 fill=%27%230b1020%27/%3E%3Ccircle cx=%2716%27 cy=%278%27 r=%274%27 fill=%27%23ff3b5c%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%274%27 fill=%27%23ffc83d%27/%3E%3Ccircle cx=%2716%27 cy=%2724%27 r=%274%27 fill=%27%2333f08e%27/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="nav">
+  <a class="brand" href="#top"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>会学习的红绿灯</a>
+  <nav>
+    <a href="#demo">在线演示</a>
+    <a href="#highlights">作品亮点</a>
+    <a href="#how">AI 原理</a>
+    <a href="#exam">实验成绩</a>
+    <a href="#code">源代码</a>
+    <a href="#run">本机运行</a>
+  </nav>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-text">
+    <p class="eyebrow">2026 人工智能创意编程 · Python 作品</p>
+    <h1>会学习的<span class="hl">红绿灯</span></h1>
+    <p class="sub">龙华智慧路口 · AI 交通指挥官</p>
+    <p class="lead">传统红绿灯只会“到点就切”，不管路上有没有车。我用 <b>纯 Python 从零手写了 Q 学习算法</b>，让红绿灯像人一样
+      <b>观察 → 决定 → 看结果 → 总结经验</b>，自己学会指挥交通：少让大家等、少排放尾气，还会给救护车让路。</p>
+    <div class="cta">
+      <a class="btn primary" href="#demo">▶ 立即体验</a>
+      <a class="btn" href="#code">看源代码</a>
+    </div>
+    <ul class="chips">
+      <li><b>0</b> 第三方库，只用 Python 标准库</li>
+      <li><b>1</b> 套代码，电脑窗口和网页同时运行</li>
+      <li id="chip-gain"><b>—</b> 平均减少等待时间</li>
+    </ul>
+  </div>
+  <div class="hero-art" aria-hidden="true">
+    <div class="pole">
+      <span class="lamp red"></span><span class="lamp yellow"></span><span class="lamp green"></span>
+    </div>
+    <div class="brainbox">
+      <div class="qrow"><i class="k"></i><i class="k"></i><i class="s"></i><i class="s"></i><i class="s"></i></div>
+      <div class="qrow"><i class="k"></i><i class="k"></i><i class="k"></i><i class="s"></i><i class="s"></i></div>
+      <div class="qrow"><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="s"></i></div>
+      <div class="qrow"><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i></div>
+      <span class="cap">Q 表 · AI 的经验笔记本</span>
+    </div>
+  </div>
+</section>
+
+<section class="demo" id="demo">
+  <div class="section-head">
+    <h2>在线演示</h2>
+    <p>下面运行的<b>不是视频，也不是 JavaScript 改写版</b>，而是通过 Pyodide 在你的浏览器里直接运行的同一份 Python 源代码。</p>
+  </div>
+  <div class="stage" id="stage">
+    <canvas id="screen" width="1280" height="780" tabindex="0" aria-label="会学习的红绿灯 演示画面"></canvas>
+    <div class="loader" id="loader">
+      <div class="spinner"><span class="lamp red"></span><span class="lamp yellow"></span><span class="lamp green"></span></div>
+      <p id="load-msg">正在把 Python 解释器搬进浏览器…</p>
+      <div class="bar"><i id="load-bar"></i></div>
+      <p class="hint">第一次打开需要下载约 10MB 的 Python 运行环境，请稍等几秒</p>
+    </div>
+  </div>
+  <div class="toolbar">
+    <span class="keys"><kbd>空格</kbd>暂停 <kbd>S</kbd>倍速 <kbd>C</kbd>场景 <kbd>A</kbd>救护车 <kbd>T</kbd>极速训练 <kbd>R</kbd>清空大脑 <kbd>L</kbd>学霸大脑 <kbd>H</kbd>原理</span>
+    <button class="btn small" id="fullscreen">⛶ 全屏演示</button>
+  </div>
+  <div class="tips">
+    <div><b>评委推荐体验路线</b></div>
+    <ol>
+      <li>点击画面开始，按 <kbd>S</kbd> 切到 8 倍速，等时钟走到 <b>早高峰 (7:30)</b>：左边定时灯的车越排越长，右边 AI 灯轻松应对。</li>
+      <li>按 <kbd>A</kbd> 派出救护车：AI 路口立即为它开绿灯，定时路口的救护车只能干等。看右上角“救护车上次等待”。</li>
+      <li>按 <kbd>R</kbd> 清空 AI 大脑：Q 表变成一片“？”，AI 一开始比定时灯还笨 —— 8 倍速下大约一分钟后，它就自己学会并反超了。也可以按 <kbd>T</kbd> 让它“做梦”特训 2 小时。</li>
+    </ol>
+  </div>
+</section>
+
+<section id="highlights">
+  <div class="section-head"><h2>作品亮点</h2></div>
+  <div class="grid">
+    <article class="card"><h3>公平的对照实验</h3><p>左右两个路口共用同一个随机来车源：每一辆车在同一时刻、从同一方向、以同样的速度到达。差别只在“指挥官”—— 这是科学实验里的<b>控制变量法</b>。</p></article>
+    <article class="card"><h3>纯手写 Q 学习</h3><p>没有用任何 AI 库。状态、动作、奖励、Q 表、ε-贪心探索、半马尔可夫折扣 γ<sup>t</sup>、<b>经验回放</b>（DeepMind DQN 用的技巧），每一行都看得懂、改得动。</p></article>
+    <article class="card"><h3>看得见的 AI 大脑</h3><p>右侧 Q 表热力图实时显示 AI 的“想法”：橙色=想切换，蓝色=想保持。“AI 心声”把每次决定翻译成人话 —— <b>可解释的人工智能</b>。</p></article>
+    <article class="card"><h3>安全规则兜底</h3><p>最短绿灯、黄灯、全红清空、最长绿灯、救护车优先写死在规则层。AI 只能在安全范围内优化，<b>想违规也做不到</b>，这也是真实世界使用 AI 的正确方式。</p></article>
+    <article class="card"><h3>算出环保账</h3><p>怠速 1 秒约排放 0.39 克 CO₂。系统实时统计两个路口的怠速排放，并换算成“相当于多少棵树一天的吸收量”。</p></article>
+    <article class="card"><h3>一套代码，两端运行</h3><p>绘图被抽象成“指令清单”：电脑版用 tkinter 画，网页版用 canvas 画，仿真和 AI 代码完全相同。还带自动测试和命令行训练脚本，方便调试。</p></article>
+  </div>
+</section>
+
+<section id="how">
+  <div class="section-head"><h2>AI 是怎么学会的？</h2><p>强化学习：不需要老师给答案，AI 通过不断“试一试、看结果”自己总结规律。</p></div>
+  <div class="loop">
+    <svg viewBox="0 0 760 300" role="img" aria-label="强化学习循环图">
+      <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+      <g class="node"><rect x="20" y="110" width="150" height="80" rx="14"/><text x="95" y="145">路口（环境）</text><text x="95" y="170" class="s">车来车往</text></g>
+      <g class="node ai"><rect x="590" y="110" width="150" height="80" rx="14"/><text x="95" y="145" transform="translate(570 0)">AI 大脑</text><text x="95" y="170" class="s" transform="translate(570 0)">查 Q 表做决定</text></g>
+      <path class="arrow" d="M170 130 C 300 40, 460 40, 590 130" marker-end="url(#ah)"/>
+      <text x="380" y="52" class="lbl">① 观察状态：绿灯方向 / 红灯方向各几辆车、最久等了多久</text>
+      <path class="arrow" d="M590 170 C 460 260, 300 260, 170 170" marker-end="url(#ah)"/>
+      <text x="380" y="262" class="lbl">② 动作：保持 or 切换（安全规则层把关）</text>
+      <text x="380" y="150" class="lbl big">③ 奖励 = −（等待车辆 × 着急程度）</text>
+      <text x="380" y="180" class="lbl">④ 更新 Q 表：好的动作分数变高</text>
+    </svg>
+    <div class="formula">
+      <code>Q[s][a] ← Q[s][a] + α · ( r + γ<sup>t</sup> · max Q[s′] − Q[s][a] )</code>
+      <p>α=0.1 学习率 · γ=0.95 每秒折扣 · t=动作持续的秒数（黄灯+全红让“切换”有真实代价，AI 会自己学会别乱切）</p>
+    </div>
+  </div>
+</section>
+
+<section id="exam">
+  <div class="section-head"><h2>实验成绩</h2><p>同一股车流分别交给两种红绿灯，各跑 20 分钟仿真时间（关闭探索，只考真本事）。数据由 <code>train.py</code> 自动生成。</p></div>
+  <div class="table-wrap"><table id="exam-table"><thead><tr><th>场景</th><th>定时灯 平均等待</th><th>AI 灯 平均等待</th><th>AI 减少等待</th><th>AI 少排放 CO₂</th></tr></thead><tbody><tr><td colspan="5">加载中…</td></tr></tbody></table></div>
+</section>
+
+<section id="code">
+  <div class="section-head"><h2>源代码</h2><p>全部源码都在这里，和上面演示里运行的是同一份文件。</p></div>
+  <div class="code-box">
+    <div class="tabs" id="tabs" role="tablist"></div>
+    <div class="code-meta" id="code-meta"></div>
+    <pre><code id="code-view" class="language-python"></code></pre>
+  </div>
+</section>
+
+<section id="run">
+  <div class="section-head"><h2>在自己电脑上运行</h2></div>
+  <div class="grid two">
+    <article class="card"><h3>方法一：海龟编辑器 / IDLE</h3><ol><li>下载整个项目文件夹（保持 <code>smartlight</code> 文件夹和 <code>main.py</code> 在一起）。</li><li>用海龟编辑器打开 <code>main.py</code>，点击“运行”。</li><li>不需要安装任何库 —— 只用 Python 自带的 tkinter。</li></ol></article>
+    <article class="card"><h3>方法二：命令行</h3><pre class="cmd">python main.py           # 打开图形界面
+python train.py          # 从零训练 AI 并考试
+python train.py --exam   # 只考试
+python -m unittest       # 运行自动测试</pre></article>
+  </div>
+</section>
+
+<footer>
+  <p>会学习的红绿灯 · 2026 人工智能创意编程挑战赛 Python 组参赛作品 · 纯 Python 编写，网页版由 Pyodide 驱动</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
