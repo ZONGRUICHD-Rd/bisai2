@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>会学习的红绿灯 · AI 交通指挥官</title>
 <meta name="description" content="一个用纯 Python 从零手写 Q 学习算法、会自己学会指挥十字路口的 AI 红绿灯。网页里运行的就是真正的 Python 源代码。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect x=%279%27 y=%271%27 width=%2714%27 height=%2730%27 rx=%277%27 fill=%27%230b1020%27/%3E%3Ccircle cx=%2716%27 cy=%278%27 r=%274%27 fill=%27%23ff3b5c%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%274%27 fill=%27%23ffc83d%27/%3E%3Ccircle cx=%2716%27 cy=%2724%27 r=%274%27 fill=%27%2333f08e%27/%3E%3C/svg%3E">
@@ -62,22 +62,35 @@
     <p>下面运行的<b>不是视频，也不是 JavaScript 改写版</b>，而是通过 Pyodide 在你的浏览器里直接运行的同一份 Python 源代码。</p>
   </div>
   <div class="stage" id="stage">
-    <canvas id="screen" width="1280" height="780" tabindex="0" aria-label="会学习的红绿灯 演示画面"></canvas>
-    <div class="loader" id="loader">
-      <div class="spinner"><span class="lamp red"></span><span class="lamp yellow"></span><span class="lamp green"></span></div>
-      <p id="load-msg">正在把 Python 解释器搬进浏览器…</p>
-      <div class="bar"><i id="load-bar"></i></div>
-      <p class="hint">第一次打开需要下载约 10MB 的 Python 运行环境，请稍等几秒</p>
+    <div class="screen-wrap" id="screen-wrap">
+      <canvas id="screen" width="1280" height="780" tabindex="0" aria-label="会学习的红绿灯 演示画面"></canvas>
+      <div class="loader" id="loader">
+        <div class="spinner"><span class="lamp red"></span><span class="lamp yellow"></span><span class="lamp green"></span></div>
+        <p id="load-msg">正在把 Python 解释器搬进浏览器…</p>
+        <div class="bar"><i id="load-bar"></i></div>
+        <p class="hint">第一次打开需要下载约 10MB 的 Python 运行环境，请稍等几秒</p>
+      </div>
+    </div>
+    <div class="controls" id="controls">
+      <button data-key="space"><kbd>空格</kbd>暂停/继续</button>
+      <button data-key="s"><kbd>S</kbd>倍速</button>
+      <button data-key="c"><kbd>C</kbd>切换场景</button>
+      <button data-key="a"><kbd>A</kbd>派救护车</button>
+      <button data-key="t"><kbd>T</kbd>极速训练</button>
+      <button data-key="r"><kbd>R</kbd>清空大脑</button>
+      <button data-key="l"><kbd>L</kbd>学霸大脑</button>
+      <button data-key="h"><kbd>H</kbd>原理说明</button>
+      <button class="fs-only exit" id="fs-exit">✕ 退出全屏</button>
     </div>
   </div>
   <div class="toolbar">
-    <span class="keys"><kbd>空格</kbd>暂停 <kbd>S</kbd>倍速 <kbd>C</kbd>场景 <kbd>A</kbd>救护车 <kbd>T</kbd>极速训练 <kbd>R</kbd>清空大脑 <kbd>L</kbd>学霸大脑 <kbd>H</kbd>原理</span>
+    <span>手机上推荐点“全屏演示”，竖着拿手机也会自动横过来显示</span>
     <button class="btn small" id="fullscreen">⛶ 全屏演示</button>
   </div>
   <div class="tips">
     <div><b>评委推荐体验路线</b></div>
     <ol>
-      <li>点击画面开始，按 <kbd>S</kbd> 切到 8 倍速，等时钟走到 <b>早高峰 (7:30)</b>：左边定时灯的车越排越长，右边 AI 灯轻松应对。</li>
+      <li>点击画面开始（手机先点“全屏演示”），按 <kbd>S</kbd> 切到 8 倍速，等时钟走到 <b>早高峰 (7:30)</b>：左边定时灯的车越排越长，右边 AI 灯轻松应对。</li>
       <li>按 <kbd>A</kbd> 派出救护车：AI 路口立即为它开绿灯，定时路口的救护车只能干等。看右上角“救护车上次等待”。</li>
       <li>按 <kbd>R</kbd> 清空 AI 大脑：Q 表变成一片“？”，AI 一开始比定时灯还笨 —— 8 倍速下大约一分钟后，它就自己学会并反超了。也可以按 <kbd>T</kbd> 让它“做梦”特训 2 小时。</li>
     </ol>

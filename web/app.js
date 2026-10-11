@@ -28,8 +28,89 @@ function fitCanvas() {
   canvas.height = Math.round(H * scale);
   ctx.setTransform(scale, 0, 0, scale, 0, 0);
 }
-window.addEventListener("resize", fitCanvas);
-document.addEventListener("fullscreenchange", () => setTimeout(fitCanvas, 50));
+
+// ---------------------------------------------------------------- 全屏 --
+// iPhone 的浏览器不支持“让网页元素全屏”，所以自己做：一个铺满屏幕的层。
+// 手机竖着拿时，把整个层旋转 90° 变成横屏，画面能大一倍。
+const stage = document.getElementById("stage");
+const wrap = document.getElementById("screen-wrap");
+
+function isFs() { return stage.classList.contains("fs"); }
+function isRotated() { return stage.classList.contains("rot"); }
+
+function layout() {
+  if (!isFs()) {
+    stage.removeAttribute("style");
+    wrap.removeAttribute("style");
+    stage.classList.remove("rot");
+    fitCanvas();
+    return;
+  }
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const rot = vh > vw;                       // 竖屏 → 旋转成横屏
+  const lw = rot ? vh : vw, lh = rot ? vw : vh;
+  stage.classList.toggle("rot", rot);
+  stage.style.width = lw + "px";
+  stage.style.height = lh + "px";
+  stage.style.transform = rot ? "translateX(" + vw + "px) rotate(90deg)" : "none";
+  const ctrlW = lw >= 1000 ? 170 : 128;
+  const cw = Math.max(200, Math.min(lw - ctrlW - 26, (lh - 16) * W / H));
+  wrap.style.width = Math.floor(cw) + "px";
+  fitCanvas();
+}
+
+function enterFs() {
+  stage.classList.add("fs");
+  document.body.classList.add("fs-open");
+  layout();
+  const root = document.documentElement;
+  const req = root.requestFullscreen || root.webkitRequestFullscreen;
+  if (req) {                                  // 支持的浏览器（安卓、电脑）顺便隐藏地址栏并锁定横屏
+    try {
+      const p = req.call(root);
+      if (p && p.then) {
+        p.then(() => screen.orientation && screen.orientation.lock && screen.orientation.lock("landscape"))
+          .catch(() => {}).then(() => setTimeout(layout, 300));
+      }
+    } catch (e) { /* 不支持就算了，铺满屏幕的层照样能用 */ }
+  }
+  canvas.focus({ preventScroll: true });
+}
+
+function exitFs() {
+  stage.classList.remove("fs");
+  document.body.classList.remove("fs-open");
+  layout();
+  const fsEl = document.fullscreenElement || document.webkitFullscreenElement;
+  const exit = document.exitFullscreen || document.webkitExitFullscreen;
+  if (fsEl && exit) {
+    const p = exit.call(document);
+    if (p && p.catch) p.catch(() => {});
+  }
+}
+
+window.addEventListener("resize", layout);
+window.addEventListener("orientationchange", () => setTimeout(layout, 300));
+function onNativeFsChange() {
+  if (!(document.fullscreenElement || document.webkitFullscreenElement) && isFs()) exitFs();
+  else setTimeout(layout, 100);
+}
+document.addEventListener("fullscreenchange", onNativeFsChange);
+document.addEventListener("webkitfullscreenchange", onNativeFsChange);
+document.getElementById("fullscreen").addEventListener("click", enterFs);
+document.getElementById("fs-exit").addEventListener("click", exitFs);
+
+// 屏幕上的一点 → 画布里的逻辑坐标（1280×780），旋转时要“转回来”
+function toLogical(e) {
+  if (isRotated()) {
+    const u = e.clientY, v = window.innerWidth - e.clientX;   // 旋转层自己的坐标
+    let x = 0, y = 0, el = canvas;
+    while (el && el !== stage) { x += el.offsetLeft; y += el.offsetTop; el = el.offsetParent; }
+    return [(u - x) * W / canvas.offsetWidth, (v - y) * H / canvas.offsetHeight];
+  }
+  const r = canvas.getBoundingClientRect();
+  return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height];
+}
 
 function roundRect(x, y, w, h, r) {
   r = Math.min(r, w / 2, h / 2);
@@ -102,7 +183,7 @@ async function loadText(path) {
 }
 
 async function boot() {
-  fitCanvas();
+  layout();
   setLoad("正在把 Python 解释器搬进浏览器…", 10);
   const pyodide = await loadPyodide();
   setLoad("正在载入 smartlight 源代码…", 70);
@@ -117,10 +198,16 @@ async function boot() {
   loader.classList.add("done");
 
   canvas.addEventListener("pointerdown", (e) => {
-    const r = canvas.getBoundingClientRect();
-    bridge.click((e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height);
+    const [x, y] = toLogical(e);
+    bridge.click(x, y);
     canvas.focus({ preventScroll: true });
   });
+  for (const btn of document.querySelectorAll("#controls button[data-key]")) {
+    btn.addEventListener("click", () => {
+      bridge.key(btn.dataset.key);
+      canvas.focus({ preventScroll: true });
+    });
+  }
   canvas.addEventListener("keydown", (e) => {
     const map = { " ": "space", Escape: "escape", Enter: "return" };
     const key = map[e.key] || e.key;
@@ -152,14 +239,6 @@ boot().catch((err) => {
   console.error(err);
   loader.classList.add("error");
   setLoad("加载失败：" + err.message + "（请检查网络后刷新）", 100);
-});
-
-// ---------------------------------------------------------------- 全屏 --
-document.getElementById("fullscreen").addEventListener("click", () => {
-  const stage = document.getElementById("stage");
-  if (document.fullscreenElement) document.exitFullscreen();
-  else if (stage.requestFullscreen) stage.requestFullscreen();
-  canvas.focus({ preventScroll: true });
 });
 
 // ---------------------------------------------------------------- 成绩表 --

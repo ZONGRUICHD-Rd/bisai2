@@ -14,7 +14,7 @@
   --mono: "JetBrains Mono", Consolas, monospace;
 }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body {
   margin: 0; background: var(--bg); color: var(--text); font-family: var(--font);
   line-height: 1.7; -webkit-font-smoothing: antialiased;
@@ -79,11 +79,27 @@ section { max-width: 1240px; margin: 0 auto; padding: 72px 16px 8px; }
 /* ---- 演示 ---- */
 .section-head h2 { font-size: 32px; margin: 0 0 6px; font-weight: 900; }
 .section-head p { color: var(--muted); margin: 0 0 24px; max-width: 860px; }
-.stage { position: relative; border-radius: 18px; overflow: hidden; border: 1px solid var(--border); background: var(--bg);
-         box-shadow: 0 40px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(53,224,161,.1); }
-#screen { display: block; width: 100%; height: auto; aspect-ratio: 1280 / 780; outline: none; cursor: pointer; touch-action: manipulation; }
-.stage:fullscreen { display: flex; align-items: center; justify-content: center; border-radius: 0; }
-.stage:fullscreen #screen { width: min(100vw, calc(100vh * 1280 / 780)); }
+.screen-wrap { position: relative; border-radius: 18px; overflow: hidden; border: 1px solid var(--border); background: var(--bg);
+               box-shadow: 0 40px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(53,224,161,.1); }
+#screen { display: block; width: 100%; height: auto; aspect-ratio: 1280 / 780; outline: none; cursor: pointer;
+          touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+.controls { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; }
+.controls button { font-family: var(--font); font-size: 14px; color: var(--text); background: var(--panel); border: 1px solid var(--border);
+                   border-radius: 10px; padding: 10px 6px; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.controls button:active { background: var(--panel2); border-color: var(--ai); }
+.controls kbd { margin: 0 6px 0 0; }
+.controls .fs-only { display: none; }
+.controls .exit { color: var(--danger); }
+
+/* 全屏模式：不依赖浏览器的全屏功能（iPhone 不支持），用一个铺满屏幕的层实现；竖屏时整体旋转 90° 变成横屏 */
+body.fs-open { overflow: hidden; }
+.stage.fs { position: fixed; top: 0; left: 0; z-index: 1000; background: var(--bg); display: flex; align-items: center;
+            justify-content: center; gap: 10px; padding: 8px; transform-origin: 0 0; }
+.stage.fs .screen-wrap { border-radius: 10px; flex: none; }
+.stage.fs .controls { margin: 0; flex: none; display: flex; flex-direction: column; gap: 6px; max-height: 100%; overflow-y: auto; }
+.stage.fs .controls button { padding: 6px 8px; font-size: 13px; white-space: nowrap; text-align: left; }
+.stage.fs .controls .fs-only { display: block; }
+.stage.fs .controls kbd { display: none; }
 .loader { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
           background: rgba(11, 16, 32, .96); gap: 8px; padding: 16px; text-align: center; transition: opacity .4s; }
 .loader.done { opacity: 0; pointer-events: none; }
@@ -150,5 +166,6 @@ footer { text-align: center; color: var(--muted); font-size: 13px; padding: 60px
   .hero-art { display: none; }
   .grid, .grid.two { grid-template-columns: 1fr; }
   .nav nav { display: none; }
+  .controls { grid-template-columns: repeat(2, 1fr); }
   section { padding-top: 48px; }
 }
