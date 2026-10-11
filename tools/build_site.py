@@ -31,6 +31,8 @@ DOCS = {
     "smartlight/web_bridge.py": "网页版和 JavaScript 对接",
     "train.py": "命令行训练 & 考试",
     "tests/test_smartlight.py": "自动测试",
+    "tools/pil_backend.py": "第四种画法：把绘图指令画成图片（做视频用）",
+    "tools/make_video.py": "生成作品介绍视频",
 }
 
 
@@ -69,6 +71,10 @@ def main():
         json.dump({"package": package, "code": code, "docs": DOCS, "lines": lines}, fh, ensure_ascii=False)
     with open(os.path.join(OUT, "results.json"), "w", encoding="utf-8") as fh:
         json.dump(exam_results(), fh, ensure_ascii=False)
+    video = os.path.join(ROOT, "作品介绍视频.mp4")
+    if os.path.exists(video):                     # 作品介绍视频也放到网页上
+        shutil.copy(video, os.path.join(OUT, "video.mp4"))
+        shutil.copy(os.path.join(ROOT, "docs", "images", "video_poster.jpg"), os.path.join(OUT, "video_poster.jpg"))
     open(os.path.join(OUT, ".nojekyll"), "w").close()
     print("网页已生成：%s（Python 源码共 %d 行）" % (OUT, lines))
 

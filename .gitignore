@@ -2,3 +2,4 @@ __pycache__/
 *.pyc
 _site/
 my_brain.json
+video_build/

@@ -114,6 +114,9 @@ body.fs-open { overflow: hidden; }
 .tips { margin-top: 18px; background: var(--panel); border: 1px solid var(--border); border-left: 4px solid var(--warn); border-radius: 12px; padding: 14px 20px; }
 .tips ol { margin: 6px 0 0; padding-left: 20px; color: #c5cbe8; }
 
+.video-wrap { border-radius: 18px; overflow: hidden; border: 1px solid var(--border); background: #000; }
+.video-wrap video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; }
+
 /* ---- 卡片 ---- */
 .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .grid.two { grid-template-columns: repeat(2, 1fr); }
