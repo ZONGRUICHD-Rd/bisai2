@@ -54,7 +54,7 @@ smartlight/
 web/                       网页版外壳（Pyodide 在浏览器里运行上面的 Python）
 tools/build_site.py        生成网页版到 _site/
 tests/                     自动测试
-作品说明文档.md            参赛说明文档（设计意图、功能、材料、实现过程、反思）
+作品说明文档.md / .pdf     参赛说明文档（设计意图、功能、材料、实现过程、反思）
 作品介绍视频.mp4           介绍视频（由 tools/make_video.py 生成）
 ```
 
