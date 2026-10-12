@@ -28,7 +28,7 @@
 \usepackage{caption}
 \usepackage{fancyhdr}
 \usepackage[hidelinks]{hyperref}
-\hypersetup{pdfauthor={欧阳卓元},pdftitle={会学习的红绿灯——基于纯 Python 手写 Q 学习的自适应交通信号控制},pdfsubject={2026 年深圳市龙华区人工智能创意编程挑战赛 Python 小学组}}
+\hypersetup{pdfauthor={欧阳卓元},pdftitle={会学习的红绿灯——基于 Q 学习的自适应交通信号控制},pdfsubject={2026 年深圳市龙华区人工智能创意编程挑战赛 Python 小学组}}
 
 \definecolor{aigreen}{HTML}{1F9D6E}
 \definecolor{fixedorange}{HTML}{E0603E}
@@ -55,7 +55,7 @@
 
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{\small\sffamily 会学习的红绿灯：手写 Q 学习的自适应信号控制}
+\fancyhead[L]{\small\sffamily 会学习的红绿灯：基于 Q 学习的自适应信号控制}
 \fancyhead[R]{\small\sffamily 欧阳卓元 · 和平实验小学 · Python 小学组}
 \fancyfoot[C]{\small\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
@@ -67,7 +67,7 @@
 
 \begin{center}
   {\LARGE\bfseries\sffamily 会学习的红绿灯}\\[0.6em]
-  {\large\sffamily ——基于纯 Python 手写 Q 学习的自适应交通信号控制}\\[1.2em]
+  {\large\sffamily ——基于 Q 学习的自适应交通信号控制}\\[1.2em]
   {\large 欧阳卓元}\\[0.3em]
   {\normalsize 深圳市龙华区和平实验小学\quad 四年级三班\quad 指导教师：\underline{\hspace{5em}}}\\[0.4em]
   {\small 2026 年深圳市龙华区人工智能创意编程挑战赛 · Python 小学组}\\[0.3em]
@@ -77,7 +77,7 @@
 
 \begin{abstract}
 传统定时红绿灯按固定时间表轮换，不随路况变化，常常出现“一边排长队、另一边空等”的现象。
-本作品用 Python 标准库从零实现了一个十字路口交通仿真，并手写 Q 学习（Q-learning）算法控制信号灯：
+本作品在 AI 编程助手 Claude 的帮助下，用 Python 标准库实现了一个十字路口交通仿真，并用不依赖任何 AI 库的 Q 学习（Q-learning）算法控制信号灯：
 AI 把路况抽象为“绿灯方向车数、红灯方向车数、红灯方向最久等待时间”三个分档特征，
 以“等待车辆的着急程度”的相反数作为奖励，用考虑动作持续时间的半马尔可夫更新、经验回放和自适应学习率进行学习；
 最短/最长绿灯、黄灯、全红清空和救护车优先等安全约束由独立的规则层保证。
@@ -104,7 +104,7 @@ AI 把路况抽象为“绿灯方向车数、红灯方向车数、红灯方向�
 智能体通过“观察—尝试—看结果—总结经验”自己学会决策，非常适合这个问题。本作品的目标是：
 \begin{enumerate}
   \item 用 Python 搭建可视化的十字路口交通仿真，车辆会跟车、会停车、不会闯红灯；
-  \item 不借助任何 AI 库，手写 Q 学习算法\cite{watkins1992}控制信号灯；
+  \item 不调用任何现成的 AI 库，用 Q 学习算法\cite{watkins1992}控制信号灯；
   \item 让 AI 与定时信号灯在完全相同的车流下公平对比，用数据检验效果；
   \item 让评委和同学无需安装软件，在浏览器和手机上即可体验。
 \end{enumerate}
@@ -364,7 +364,7 @@ AI 在全部场景中获胜，平均等待时间减少 51.0\%～67.3\%，平均 
 
 \subsection{消融实验：经验回放}
 \label{sec:ablation}
-在不使用经验回放（$K=0$）时我们发现，同样的代码换一个随机种子，训练结果差异很大。
+在不使用经验回放（$K=0$）时发现，同样的代码换一个随机种子，训练结果差异很大。
 为此用 6 个随机种子各训练 2 小时虚拟车流，比较 $K=0$ 与 $K=20$，每个大脑在 4 个时刻各测试 900\,s（表~\ref{tab:ablation}）。
 
 \begin{table}[h]
@@ -465,6 +465,12 @@ AI 信号灯在五个典型场景中平均减少 59.7\% 的等待时间，经验
 安全规则层保证了 AI 的决策始终在安全范围之内。作品支持电脑、网页与手机运行，评委可在线直接体验。
 
 % ====================================================================
+\section*{AI 使用声明}
+本作品在 AI 编程助手 Claude（Anthropic 公司）的帮助下完成：程序代码、实验脚本、本文、作品说明文档和介绍视频由 Claude 编写和生成，
+作者提出了作品要求，并参与了修改和检查。作品中的 Q 学习算法没有调用任何现成的 AI 库，算法的每一步都写在
+\texttt{smartlight/brain.py} 与 \texttt{smartlight/controllers.py} 中，可直接阅读和修改；文中全部实验数据可用 \texttt{tools/experiments.py} 复现。
+
+% ====================================================================
 \begin{thebibliography}{99}\small
 \bibitem{sutton2018} R. S. Sutton, A. G. Barto. \emph{Reinforcement Learning: An Introduction} (2nd ed.). MIT Press, 2018.
 \bibitem{watkins1992} C. J. C. H. Watkins, P. Dayan. Q-learning. \emph{Machine Learning}, 8: 279--292, 1992.
@@ -498,7 +504,7 @@ AI 信号灯在五个典型场景中平均减少 59.7\% 的等待时间，经验
 功能与人机交互 & 一键运行；按钮、快捷键、触屏三种操作；开场引导与原理说明；网页与手机在线体验 \\
 创新性 & 公平对照实验；Q 表可视化与“AI 心声”；“AI 做梦”极速训练；一套代码四种运行环境 \\
 艺术性 & 夜景城市俯视风格；刹车灯、救护车警灯、久等车辆“生气”提示等细节 \\
-技术性 & 分层架构；手写半马尔可夫 Q 学习、经验回放、自适应学习率；9 个自动测试；实验可复现 \\
+技术性 & 分层架构；不依赖 AI 库的半马尔可夫 Q 学习、经验回放、自适应学习率；9 个自动测试；实验可复现 \\
 \bottomrule
 \end{tabularx}
 \end{center}

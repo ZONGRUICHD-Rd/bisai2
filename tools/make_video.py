@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# 作者：欧阳卓元（深圳市龙华区和平实验小学 四年级三班）· 2026 年深圳市龙华区人工智能创意编程挑战赛 Python 小学组
+# 作者：欧阳卓元（深圳市龙华区和平实验小学 四年级三班）· 2026 年深圳市龙华区人工智能创意编程挑战赛 Python 小学组 · 代码由 AI 编程助手 Claude 协助编写
 """
 生成《会学习的红绿灯》作品介绍视频
 ==================================
@@ -51,7 +51,7 @@ CA = "/root/.ccr/ca-bundle.crt"
 # ============================================================== 分镜和台词 ==
 SHOTS = [
     dict(key="title", kind="card", min=7,
-         text="大家好！我是深圳市龙华区和平实验小学四年级三班的欧阳卓元。我的作品叫《会学习的红绿灯》，它是一个用 Python 从零手写人工智能算法、会自己学会指挥十字路口的红绿灯。"),
+         text="大家好！我是深圳市龙华区和平实验小学四年级三班的欧阳卓元。我的作品叫《会学习的红绿灯》，它是一个会自己学会指挥十字路口的红绿灯。这个作品是在 AI 编程助手 Claude 的帮助下完成的。"),
     dict(key="problem", kind="card", min=10,
          text="每天上学路上，我常常看到：一边排着长长的车队，另一边一辆车都没有，可红灯还是要亮满时间。"
               "因为传统红绿灯是定时的，它不会看路况。"
@@ -59,7 +59,7 @@ SHOTS = [
     dict(key="idea", kind="card", min=8,
          text="于是我想：能不能让红绿灯像人一样，自己观察、自己尝试、自己总结经验？这正是人工智能里的强化学习。"),
     dict(key="intro", kind="app", min=18, chapter=("01", "公平对比"),
-         text="这就是我的作品。左边是传统定时红绿灯，每十五秒机械地切换一次；右边是我写的 AI 红绿灯。"
+         text="这就是我的作品。左边是传统定时红绿灯，每十五秒机械地切换一次；右边是 AI 红绿灯。"
               "两个路口迎来完全相同的车流，每一辆车都在同一时刻、从同一个方向到达，这样的比较才公平。"),
     dict(key="rush", kind="app", min=34, chapter=("02", "早高峰"),
          text="现在把速度调到八倍，进入早高峰，从北边往南开的车特别多。"
@@ -79,11 +79,11 @@ SHOTS = [
               "但它边用边学，几分钟后，Q 表慢慢长出了规律，它又反超了定时灯。"
               "我还可以按 T 键，让它在看不见的虚拟路口里做梦练习两个小时，几秒钟就学完了。"),
     dict(key="results", kind="card", min=12,
-         text="我用同一股车流，给两种红绿灯做了五个场景的考试。早高峰、晚高峰、平峰、深夜和智能一天，AI 红绿灯全部获胜，平均减少了百分之六十的等待时间。"),
+         text="用同一股车流，给两种红绿灯做了五个场景的考试。早高峰、晚高峰、平峰、深夜和智能一天，AI 红绿灯全部获胜，平均减少了百分之六十的等待时间。"),
     dict(key="tech", kind="card", min=16,
-         text="整个作品只用 Python 自带的标准库，Q 学习算法的每一行都是我自己写的。"
-              "我把画面抽象成一份绘图指令清单，同一份代码可以在电脑窗口、网页和手机上运行，连这个视频的画面也是用它一帧一帧画出来的。"
-              "我还写了九个自动测试，保证车不会追尾、不会闯红灯。"),
+         text="整个作品只用 Python 自带的标准库，没有调用任何现成的 AI 库，Q 学习算法的每一步都写在代码里。作品的代码是由 AI 编程助手 Claude 帮忙编写的。"
+              "程序把画面抽象成一份绘图指令清单，同一份代码可以在电脑窗口、网页和手机上运行，连这个视频的画面也是用它一帧一帧画出来的。"
+              "作品还带有九个自动测试，保证车不会追尾、不会闯红灯。"),
     dict(key="outro", kind="card", min=9,
          text="以后，我想让多个路口的 AI 互相配合，形成绿波带，再加入行人和左转。欢迎打开网页亲自试一试，谢谢大家！"),
 ]
@@ -112,20 +112,85 @@ def audio_len(path):
     return float(out.strip())
 
 
+def _split_sentences(text):
+    out, cur = [], ""
+    for ch in text:
+        cur += ch
+        if ch in "。！？":
+            out.append(cur)
+            cur = ""
+    if cur.strip():
+        out.append(cur)
+    return out
+
+
+def _gtts(text, mp3):
+    """备用配音：Google 语音。逐句合成再拼起来，这样每句话的起止时间是准确的（字幕用）。"""
+    from gtts import gTTS
+    parts, sents, t = [], [], 0.0
+    for i, sent in enumerate(_split_sentences(text)):
+        raw = mp3 + ".part%d.mp3" % i
+        fast = mp3 + ".part%d.wav" % i
+        for attempt in range(4):
+            try:
+                gTTS(sent, lang="zh-CN").save(raw)
+                break
+            except Exception as e:
+                print("  配音失败，重试：", e)
+                time.sleep(2 ** attempt)
+        subprocess.check_call(["ffmpeg", "-y", "-v", "error", "-i", raw, "-af",
+                               "atempo=1.2,silenceremove=start_periods=1:start_threshold=-50dB,"
+                               "areverse,silenceremove=start_periods=1:start_threshold=-50dB,areverse,"
+                               "apad=pad_dur=0.25", "-ar", "24000", "-ac", "1", fast])
+        d = audio_len(fast)
+        sents.append((t, d - 0.25, sent))
+        parts.append(fast)
+        t += d
+    lst = mp3 + ".txt"
+    with open(lst, "w", encoding="utf-8") as f:
+        f.write("".join("file '%s'\n" % x for x in parts))
+    subprocess.check_call(["ffmpeg", "-y", "-v", "error", "-f", "concat", "-safe", "0", "-i", lst,
+                           "-c:a", "libmp3lame", "-b:a", "128k", mp3])
+    return sents
+
+
+ENGINE = None          # 实际使用的配音引擎（"edge" 或 "gtts"），整部视频必须统一
+
+
+def pick_engine():
+    """先试微软 edge-tts；用不了就整部视频都换成 Google 语音，保证前后声音一致。"""
+    global ENGINE
+    if ENGINE:
+        return ENGINE
+    probe = os.path.join(BUILD, "probe.mp3")
+    try:
+        asyncio.run(_tts("测试。", probe))
+        ENGINE = "edge"
+    except Exception as e:
+        print("  edge-tts 不可用（%s），整部视频改用 Google 语音" % str(e)[:40])
+        ENGINE = "gtts"
+    return ENGINE
+
+
 def prepare_voice(shot):
-    tag = hashlib.md5((VOICE + shot["text"]).encode("utf-8")).hexdigest()[:10]
+    engine = pick_engine()
+    voice = VOICE if engine == "edge" else "gtts-zh-CN-1.2"
+    tag = hashlib.md5((voice + shot["text"]).encode("utf-8")).hexdigest()[:10]
     mp3 = os.path.join(BUILD, "voice_%s_%s.mp3" % (shot["key"], tag))
     meta = mp3 + ".json"
     if not os.path.exists(meta):
-        for attempt in range(4):
-            try:
-                sents = asyncio.run(_tts(shot["text"], mp3))
-                break
-            except Exception as e:                  # 网络偶尔会断，重试
-                print("  配音失败，重试：", e)
-                time.sleep(2 ** attempt)
+        if engine == "gtts":
+            sents = _gtts(shot["text"], mp3)
         else:
-            raise RuntimeError("配音失败")
+            for attempt in range(4):
+                try:
+                    sents = asyncio.run(_tts(shot["text"], mp3))
+                    break
+                except Exception as e:                  # 网络偶尔会断，重试
+                    print("  配音失败，重试：", e)
+                    time.sleep(2 ** attempt)
+            else:
+                raise RuntimeError("配音失败")
         with open(meta, "w", encoding="utf-8") as f:
             json.dump(sents, f, ensure_ascii=False)
     with open(meta, encoding="utf-8") as f:
@@ -347,10 +412,11 @@ def frames_title(shot, bg_path, outro=False):
             p.text(520, 360, "会学习的红绿灯", WHITE, 124, True, "w")
             p.text(526, 490, "龙华智慧路口 · AI 交通指挥官", COL["muted"], 50, False, "w")
             p.rect(526, 570, 940, 64, COL["panel"], COL["ai"], 2, 32)
-            p.text(996, 602, "Python 小学组 · 纯手写 Q 学习 · 0 个第三方库", COL["ai"], 30, True, "center")
+            p.text(996, 602, "Python 小学组 · AI 辅助编程 · 0 个第三方库", COL["ai"], 30, True, "center")
             p.text(526, 700, "作者：%s" % C.AUTHOR, COL["warn"], 44, True, "w")
             p.text(526, 762, "%s　%s" % (C.SCHOOL, C.CLASS_NAME), COL["text"], 34, False, "w")
             p.text(526, 815, C.CONTEST, COL["muted"], 28, False, "w")
+            p.text(526, 865, C.AI_NOTE, COL["muted"], 26, False, "w")
         else:
             p.text(520, 330, "谢谢观看！", WHITE, 120, True, "w")
             p.text(526, 450, "在线体验：zongruichd-rd.github.io/bisai2", COL["ai"], 40, True, "w")
@@ -362,6 +428,7 @@ def frames_title(shot, bg_path, outro=False):
                     p.text(x + 150, 633, chip, COL["text"], 30, True, "center")
                 p.text(526, 720, "下一步想做的", COL["dim"], 26, False, "w")
             p.text(526, 820, "作者：%s　%s %s" % (C.AUTHOR, C.SCHOOL, C.CLASS_NAME), COL["warn"], 34, True, "w")
+            p.text(526, 875, C.AI_NOTE, COL["muted"], 26, False, "w")
         yield "card", p.cmds, overlay(shot, t)
 
 
@@ -528,7 +595,7 @@ def frames_tech(shot):
     s2, s3 = sent_start(shot, 1), sent_start(shot, 2)
     img = os.path.join(ROOT, "docs", "images")
     items = (("0", "个第三方库", "只用 Python 自带的标准库", 0.0),
-             ("Q", "纯手写 Q 学习", "+ 经验回放 + 安全规则层", 1.5),
+             ("Q", "Q 学习，不调用 AI 库", "+ 经验回放 + 安全规则层", 1.5),
              ("1", "套代码，四种画法", "电脑 · 网页 · 手机 · 视频", s2),
              ("9", "个自动测试", "不追尾、不闯红灯、AI 胜过定时灯", s3))
     for i in range(n):
@@ -544,6 +611,9 @@ def frames_tech(shot):
             p.text(210, y + 80, big, COL["ai"], 80, True, "center")
             p.text(300, y + 58, head, WHITE, 40, True, "w")
             p.text(300, y + 112, sub, COL["muted"], 30, False, "w")
+        if t >= sent_start(shot, 1) - 0.2:
+            p.rect(120, 935, 860, 34, COL["panel2"], COL["warn"], 2, 17)
+            p.text(550, 952, "代码由 AI 编程助手 Claude 协助编写", COL["warn"], 24, True, "center")
         if t >= s2:
             p.cmds.append(["img", os.path.join(img, "demo_desktop.jpg"), 1060, 170, 740, 451])
             p.text(1430, 650, "电脑版（tkinter）", COL["muted"], 26, False, "center")

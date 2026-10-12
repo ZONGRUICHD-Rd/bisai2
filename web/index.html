@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>会学习的红绿灯 · AI 交通指挥官</title>
 <meta name="author" content="欧阳卓元（深圳市龙华区和平实验小学 四年级三班）">
-<meta name="description" content="一个用纯 Python 从零手写 Q 学习算法、会自己学会指挥十字路口的 AI 红绿灯。网页里运行的就是真正的 Python 源代码。">
+<meta name="description" content="一个会自己学会指挥十字路口的 AI 红绿灯：纯 Python 实现的 Q 学习算法，代码由 AI 编程助手 Claude 协助编写。网页里运行的就是真正的 Python 源代码。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect x=%279%27 y=%271%27 width=%2714%27 height=%2730%27 rx=%277%27 fill=%27%230b1020%27/%3E%3Ccircle cx=%2716%27 cy=%278%27 r=%274%27 fill=%27%23ff3b5c%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%274%27 fill=%27%23ffc83d%27/%3E%3Ccircle cx=%2716%27 cy=%2724%27 r=%274%27 fill=%27%2333f08e%27/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,6 +23,7 @@
     <a href="#how">AI 原理</a>
     <a href="#exam">实验成绩</a>
     <a href="#code">源代码</a>
+    <a href="#ai-note">AI 使用说明</a>
     <a href="#run">本机运行</a>
   </nav>
 </header>
@@ -33,7 +34,7 @@
     <h1>会学习的<span class="hl">红绿灯</span></h1>
     <p class="sub">龙华智慧路口 · AI 交通指挥官</p>
     <p class="author">作者：<b>欧阳卓元</b>　深圳市龙华区和平实验小学 四年级三班</p>
-    <p class="lead">传统红绿灯只会“到点就切”，不管路上有没有车。我用 <b>纯 Python 从零手写了 Q 学习算法</b>，让红绿灯像人一样
+    <p class="lead">传统红绿灯只会“到点就切”，不管路上有没有车。作品用 <b>纯 Python 实现了 Q 学习算法</b>（不调用任何现成的 AI 库），让红绿灯像人一样
       <b>观察 → 决定 → 看结果 → 总结经验</b>，自己学会指挥交通：少让大家等、少排放尾气，还会给救护车让路。</p>
     <div class="cta">
       <a class="btn primary" href="#demo">▶ 立即体验</a>
@@ -41,6 +42,7 @@
     </div>
     <ul class="chips">
       <li><b>0</b> 第三方库，只用 Python 标准库</li>
+      <li><b>AI</b> 代码由 AI 编程助手 Claude 协助编写</li>
       <li><b>1</b> 套代码，电脑窗口和网页同时运行</li>
       <li id="chip-gain"><b>—</b> 平均减少等待时间</li>
     </ul>
@@ -101,7 +103,7 @@
 </section>
 
 <section id="video">
-  <div class="section-head"><h2>作品介绍视频</h2><p>3 分 56 秒，带配音和字幕。画面是程序真实运行的录制：视频的每一帧都由同一份 Python 绘图指令清单生成。</p></div>
+  <div class="section-head"><h2>作品介绍视频</h2><p>4 分 31 秒，带配音和字幕。画面是程序真实运行的录制：视频的每一帧都由同一份 Python 绘图指令清单生成。</p></div>
   <div class="video-wrap"><video controls preload="none" playsinline poster="video_poster.jpg" src="video.mp4"></video></div>
 </section>
 
@@ -109,7 +111,7 @@
   <div class="section-head"><h2>作品亮点</h2></div>
   <div class="grid">
     <article class="card"><h3>公平的对照实验</h3><p>左右两个路口共用同一个随机来车源：每一辆车在同一时刻、从同一方向、以同样的速度到达。差别只在“指挥官”—— 这是科学实验里的<b>控制变量法</b>。</p></article>
-    <article class="card"><h3>纯手写 Q 学习</h3><p>没有用任何 AI 库。状态、动作、奖励、Q 表、ε-贪心探索、半马尔可夫折扣 γ<sup>t</sup>、<b>经验回放</b>（DeepMind DQN 用的技巧），每一行都看得懂、改得动。</p></article>
+    <article class="card"><h3>不用 AI 库的 Q 学习</h3><p>没有调用任何现成的 AI 库。状态、动作、奖励、Q 表、ε-贪心探索、半马尔可夫折扣 γ<sup>t</sup>、<b>经验回放</b>（DeepMind DQN 用的技巧），每一步都写在代码里，看得懂、改得动。</p></article>
     <article class="card"><h3>看得见的 AI 大脑</h3><p>右侧 Q 表热力图实时显示 AI 的“想法”：橙色=想切换，蓝色=想保持。“AI 心声”把每次决定翻译成人话 —— <b>可解释的人工智能</b>。</p></article>
     <article class="card"><h3>安全规则兜底</h3><p>最短绿灯、黄灯、全红清空、最长绿灯、救护车优先写死在规则层。AI 只能在安全范围内优化，<b>想违规也做不到</b>，这也是真实世界使用 AI 的正确方式。</p></article>
     <article class="card"><h3>算出环保账</h3><p>怠速 1 秒约排放 0.39 克 CO₂。系统实时统计两个路口的怠速排放，并换算成“相当于多少棵树一天的吸收量”。</p></article>
@@ -152,6 +154,11 @@
   </div>
 </section>
 
+<section id="ai-note">
+  <div class="section-head"><h2>AI 使用说明</h2></div>
+  <div class="card"><p>本作品在 <b>AI 编程助手 Claude（Anthropic 公司）</b>的帮助下完成：程序代码、作品说明文档、论文和介绍视频由 Claude 编写和生成，作者提出了作品要求，并参与了修改和检查。作品中的 Q 学习算法没有调用任何现成的 AI 库，算法的每一步都写在 <code>smartlight/brain.py</code> 和 <code>smartlight/controllers.py</code> 里。</p></div>
+</section>
+
 <section id="run">
   <div class="section-head"><h2>在自己电脑上运行</h2></div>
   <div class="grid two">
@@ -164,7 +171,7 @@ python -m unittest       # 运行自动测试</pre></article>
 </section>
 
 <footer>
-  <p>会学习的红绿灯 · 作者：欧阳卓元（深圳市龙华区和平实验小学 四年级三班）<br>2026 年深圳市龙华区人工智能创意编程挑战赛 Python 小学组参赛作品 · 纯 Python 编写，网页版由 Pyodide 驱动</p>
+  <p>会学习的红绿灯 · 作者：欧阳卓元（深圳市龙华区和平实验小学 四年级三班）<br>2026 年深圳市龙华区人工智能创意编程挑战赛 Python 小学组参赛作品 · 代码由 AI 编程助手 Claude 协助编写 · 网页版由 Pyodide 驱动</p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>

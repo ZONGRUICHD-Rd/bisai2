@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# 作者：欧阳卓元（深圳市龙华区和平实验小学 四年级三班）· 2026 年深圳市龙华区人工智能创意编程挑战赛 Python 小学组
+# 作者：欧阳卓元（深圳市龙华区和平实验小学 四年级三班）· 2026 年深圳市龙华区人工智能创意编程挑战赛 Python 小学组 · 代码由 AI 编程助手 Claude 协助编写
 """
 生成网页版（GitHub Pages）：把 web/ 页面和 Python 源代码一起复制到 _site/ 文件夹。
 用法：
@@ -22,7 +22,7 @@ from smartlight.world import compare                     # noqa: E402
 DOCS = {
     "main.py": "电脑版入口（tkinter 画图）",
     "smartlight/traffic.py": "交通仿真：车、车道、信号灯、路口",
-    "smartlight/brain.py": "AI 大脑：手写 Q 学习",
+    "smartlight/brain.py": "AI 大脑：Q 学习（不依赖 AI 库）",
     "smartlight/controllers.py": "定时控制器 & AI 控制器 & 安全规则层",
     "smartlight/scenario.py": "一天的车流变化",
     "smartlight/world.py": "对比实验场 & 极速训练",

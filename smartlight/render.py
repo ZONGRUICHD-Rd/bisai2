@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# 作者：欧阳卓元（深圳市龙华区和平实验小学 四年级三班）· 2026 年深圳市龙华区人工智能创意编程挑战赛 Python 小学组
+# 作者：欧阳卓元（深圳市龙华区和平实验小学 四年级三班）· 2026 年深圳市龙华区人工智能创意编程挑战赛 Python 小学组 · 代码由 AI 编程助手 Claude 协助编写
 """
 画面绘制：把整个世界“翻译”成一串绘图指令
 ==========================================
@@ -527,7 +527,7 @@ def draw_intro(p):
     x, y = (C.WIDTH - w) / 2, (C.HEIGHT - h) / 2
     p.rect(x, y, w, h, COL["panel"], COL["ai"], 2, 18)
     p.text(x + w / 2, y + 44, "会学习的红绿灯", COL["text"], 32, True, "center")
-    p.text(x + w / 2, y + 82, "一个会从经验中自己学会指挥交通的 AI —— 全部用 Python 从零手写", COL["muted"], 14, False, "center")
+    p.text(x + w / 2, y + 82, "一个会从经验中自己学会指挥交通的 AI —— 用 Python 实现，代码由 AI 编程助手 Claude 协助编写", COL["muted"], 14, False, "center")
     p.text(x + w / 2, y + 108, "作者：%s　%s %s" % (C.AUTHOR, C.SCHOOL, C.CLASS_NAME), COL["warn"], 13, True, "center")
     y += 26
     items = [
